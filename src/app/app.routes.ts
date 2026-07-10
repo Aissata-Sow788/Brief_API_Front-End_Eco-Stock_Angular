@@ -19,7 +19,7 @@ export const routes: Routes = [
   {
     path: '',
     component: MainLayout,
-    // canActivate: [authGuard],
+    canActivate: [authGuard],
 
     children: [
 
@@ -32,6 +32,7 @@ export const routes: Routes = [
       {
   path: 'produitform',
   component: Productform,
+   canActivate: [authGuard]
 },
 
       {
@@ -43,42 +44,43 @@ export const routes: Routes = [
       {
         path: 'products',
         component: Productlist,
-        // canActivate: [authGuard]
+        canActivate: [authGuard]
       },
 
             {
         path: 'transfer/:id',
         component: Producttransfer,
-        // canActivate: [authGuard]
+        canActivate: [authGuard]
       },
 
 
       {
   path: 'warehouseform/:id',
   component: Warehouseform,
+   canActivate: [authGuard]
 },
 
       {
         path: 'produitform/:id',
         component: Productform,
-        // canActivate: [authGuard]
+        canActivate: [authGuard]
       },
             {
         path: 'warehouseform',
         component: Warehouseform,
-        // canActivate: [authGuard]
+        canActivate: [authGuard]
       },
 
       {
         path: 'products/:id',
         component: Productfilter,
-        // canActivate: [authGuard]
+        canActivate: [authGuard]
       },
 
       {
         path: 'productdetail/:id',
         component: Productdetail,
-        // canActivate: [authGuard]
+        canActivate: [authGuard]
       }
 
     ]
