@@ -1,0 +1,14 @@
+<!-- main-layout.component.html -->
+<div class="d-flex" style="min-height: 100vh;">
+  <!-- Sidebar -->
+  <app-sidebar class="sidebar-fixed"></app-sidebar>
+
+  <!-- Colonne de droite : navbar + contenu -->
+  <div class="flex-grow-1 d-flex flex-column" style="margin-left: 220px; margin-top: 5px;">
+    <app-navbar></app-navbar>
+
+    <main class="flex-grow-1 p-4">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

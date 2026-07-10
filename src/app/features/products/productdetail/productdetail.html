@@ -1,0 +1,120 @@
+<div class="container py-5">
+
+  @if (produitdetail(); as produit) {
+
+    <div class="card bg-dark text-white border-secondary shadow-lg rounded-4 p-4">
+
+      <div class="row">
+
+        <!-- Image -->
+        <div class="col-md-4 text-center">
+          <div class="bg-light rounded-4 d-flex align-items-center justify-content-center"
+               style="height:220px;">
+            <i class="bi bi-box fs-1 text-dark"></i>
+          </div>
+        </div>
+
+        <!-- Informations -->
+        <div class="col-md-8">
+
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h2 class="fw-bold mb-1">{{ produit.nom }}</h2>
+              <p class="text-secondary">Réf. produit — céréales & grains</p>
+            </div>
+
+<span class="badge rounded-pill px-3 py-2" [ngClass]="{
+  'text-bg-success': produit.etat === 'disponible',
+  'text-bg-warning text-dark': produit.etat === 'réservé',
+  'text-bg-danger': produit.etat === 'périmé'
+}">
+  <i class="bi me-1" [ngClass]="{
+    'bi-check-circle': produit.etat === 'disponible',
+    'bi-exclamation-triangle': produit.etat === 'réservé',
+    'bi-x-circle': produit.etat === 'périmé'
+  }"></i>
+  {{ produit.etat }}
+</span>
+          </div>
+
+          <div class="row mt-4">
+
+            <div class="col-md-6 mb-4">
+              <small class="text-secondary">Quantité</small>
+              <h5>{{ produit.quantite }} sacs</h5>
+            </div>
+
+            <div class="col-md-6 mb-4">
+              <small class="text-secondary">Date d'expiration</small>
+              <h5 class="text-danger">{{ produit.date_expiration }}</h5>
+            </div>
+
+            <div class="col-6">
+              <div class="bg-secondary bg-opacity-10 rounded-3 p-3">
+                <small class="text-secondary">Entrepôt</small>
+                <h6 class="mb-0">
+                  <i class="bi bi-geo-alt"></i>
+                  {{ getNomEntrepot(produit.warehouse) }}
+                </h6>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+              <small class="text-secondary">Localisation</small>
+              <h5>
+                <i class="bi bi-geo-alt"></i>
+                Dakar - Medina
+              </h5>
+            </div>
+
+            <div class="col-md-6">
+              <small class="text-secondary">Date de création</small>
+              <h5>12 Mars 2026</h5>
+            </div>
+
+            <div class="col-md-6">
+              <small class="text-secondary">Dernière modification</small>
+              <h5>30 Mai 2026</h5>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Boutons -->
+    <div class="row mt-4 g-3">
+
+      <div class="col-md-4">
+        <button class="btn btn-outline-primary w-100 py-3 rounded-3" [routerLink]="['/transfer', produit.id]">
+          <i class="bi bi-arrow-left-right me-2"></i>
+          Transférer
+        </button>
+      </div>
+
+      <div class="col-md-4">
+        <button class="btn btn-outline-danger w-100 py-3 rounded-3" (click)="onDelete(produit.id)">
+          <i class="bi bi-trash me-2"></i>
+          Supprimer
+        </button>
+      </div>
+
+      <div class="col-md-4">
+        <button class="btn btn-primary w-100 py-3 rounded-3" [routerLink]="['/produitform', produit.id]">
+          <i class="bi bi-pencil-square me-2"></i>
+          Modifier
+        </button>
+      </div>
+
+    </div>
+
+  } @else {
+
+    <p class="text-white text-center">Chargement du produit...</p>
+
+  }
+
+</div>

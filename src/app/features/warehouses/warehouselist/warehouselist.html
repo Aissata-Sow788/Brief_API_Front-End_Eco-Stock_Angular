@@ -1,0 +1,68 @@
+<div class="container-fluid p-4">
+
+  <div class="row g-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="text-white fw-bold mb-0">Entrepots</h4>
+    <button class="btn btn-light fw-semibold" [routerLink]="'/warehouseform'">
+      + Ajouter un entrepot
+    </button>
+
+  </div>
+
+    @for (entrepot of warehouse(); track entrepot.id) {
+
+      <div class="col-md-6 col-lg-4">
+
+        <div class="warehouse-card p-3 ms-1">
+
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="warehouse-icon">
+              <i class="bi bi-building"></i>
+            </div>
+          </div>
+
+          <h5 class="text-white mt-4 mb-1">{{ entrepot.nom }}</h5>
+
+          <p class="text-secondary">
+            <i class="bi bi-geo-alt"></i>
+            {{ entrepot.localisation }}
+          </p>
+
+          <div class="row g-2 mb-4">
+            <div class="col-6">
+              <div class="info-box">
+                <small>Capacité</small>
+                <h6>{{ entrepot.capacite }}</h6>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button
+              class="btn btn-light flex-grow-1"
+              [routerLink]="['/products', entrepot.id]">
+              Voir les produits
+            </button>
+
+          <button class="btn btn-outline-light" [routerLink]="['/warehouseform', entrepot.id]">
+            <i class="bi bi-pencil"></i>
+          </button>
+            <button class="btn btn-outline-danger" (click)="onDelete(entrepot.id)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    } @empty {
+      <div class="col-12">
+        <div class="alert alert-warning">Aucun entrepôt trouvé.</div>
+      </div>
+    }
+
+  </div>
+
+</div>

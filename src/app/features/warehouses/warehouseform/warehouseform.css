@@ -1,0 +1,88 @@
+/* Fond du conteneur principal */
+.form-container {
+  background-color: #020617; /* Fond bleu nuit ultra sombre */
+  border: 1px solid #1e293b;
+  border-radius: 16px;
+  max-width: 480px;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Titres */
+.form-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+.form-subtitle {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+/* Libellés */
+.custom-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #f1f5f9;
+  margin-bottom: 6px;
+}
+
+/* Inputs de saisie */
+.custom-input {
+  background-color: #0b0f19 !important;
+  border: 1px solid #1e293b !important;
+  color: #f8fafc !important;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+}
+
+.custom-input::placeholder {
+  color: #475569;
+}
+
+.custom-input:focus {
+  background-color: #0b0f19;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  outline: none;
+}
+
+/* Bouton Annuler */
+.btn-annuler {
+  background-color: #0b0f19;
+  border: 1px solid #1e293b;
+  color: #f8fafc;
+  border-radius: 10px;
+  padding: 8px 24px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-annuler:hover {
+  background-color: #1e293b;
+  color: #fff;
+}
+
+/* Bouton Ajouter */
+.btn-ajouter {
+  background-color: #e2e8f0;
+  border: none;
+  color: #0f172a;
+  border-radius: 10px;
+  padding: 8px 24px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-ajouter:hover:not(:disabled) {
+  background-color: #f1f5f9;
+}
+
+.btn-ajouter:disabled {
+  background-color: #475569;
+  color: #94a3b8;
+  cursor: not-allowed;
+}

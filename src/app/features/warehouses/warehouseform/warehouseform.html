@@ -1,0 +1,35 @@
+<div class="card form-container text-white p-4 custom-modal-border">
+  <div class="d-flex justify-content-between align-items-start mb-4">
+    <div>
+      <h2 class="form-title mb-1">Nouvel entrepot</h2>
+      <p class="form-subtitle mb-0">Renseignez les informations de l'entrepôt.</p>
+    </div>
+    <button type="button" class="btn-close btn-close-white btn-sm" aria-label="Close" (click)="onAnnuler()"></button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onAjout()">
+
+    <div class="mb-3">
+      <label for="nom" class="form-label custom-label">Nom</label>
+      <input type="text" id="nom" class="form-control custom-input" formControlName="nom" placeholder="Entrepôt Nord">
+    </div>
+
+    <div class="mb-3">
+      <label for="quantite" class="form-label custom-label">Localisation</label>
+      <input type="text" id="quantite" class="form-control custom-input" formControlName="localisation" placeholder="120">
+    </div>
+
+
+    <div class="mb-4">
+      <label for="warehouse" class="form-label custom-label">Capacite</label>
+      <input type="number" class="form-control custom-input" formControlName="capacite" placeholder="Entrepot Dakar">
+    </div>
+
+    <div class="d-flex justify-content-end align-items-center gap-2">
+      <button type="button" class="btn btn-annuler" (click)="onAnnuler()">Annuler</button>
+      <button type="submit" class="btn btn-ajouter" [disabled]="form.invalid">Ajouter</button>
+    </div>
+
+  </form>
+</div>
+

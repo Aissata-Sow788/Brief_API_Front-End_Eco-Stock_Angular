@@ -1,0 +1,117 @@
+.warehouse-card {
+
+  background: #111827;
+
+  border: 1px solid #263244;
+
+  border-radius: 18px;
+
+  color: white;
+
+  transition: 0.3s;
+
+}
+
+
+.warehouse-card:hover {
+
+  transform: translateY(-5px);
+
+  border-color: #3b82f6;
+
+}
+
+
+
+.warehouse-icon {
+
+  width: 50px;
+
+  height: 50px;
+
+  border-radius: 14px;
+
+  background: #1e293b;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 25px;
+
+  color: #dbeafe;
+
+}
+
+
+
+.progress {
+
+  height: 6px;
+
+  background: #243044;
+
+}
+
+
+.progress-bar {
+
+  background: #3b82f6;
+
+  border-radius: 10px;
+
+}
+
+
+
+.info-box {
+
+  background: #1a263d;
+
+  border-radius: 12px;
+
+  padding: 12px;
+
+}
+
+
+.info-box small {
+
+  color: #94a3b8;
+
+}
+
+
+.info-box h6 {
+
+  color: white;
+
+  margin: 0;
+
+}
+
+
+
+.btn-light {
+
+  border-radius: 10px;
+
+  font-weight: 600;
+
+}
+
+
+
+.btn-outline-light,
+
+.btn-outline-danger {
+
+  width: 45px;
+
+  height: 42px;
+
+  border-radius: 10px;
+
+}

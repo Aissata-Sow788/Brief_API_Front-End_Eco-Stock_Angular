@@ -1,0 +1,124 @@
+<div class="container-fluid p-4">
+
+  @if (moveProduit(); as produit) {
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-start mb-4">
+      <div>
+        <h2 class="text-white fw-bold mb-1">Transférer un produit</h2>
+        <p class="text-secondary mb-0">Déplacez ce produit vers un autre entrepôt en quelques clics.</p>
+      </div>
+      <button class="btn btn-outline-light btn-sm" (click)="retour()">
+        <i class="bi bi-arrow-left me-1"></i>
+        Retour
+      </button>
+    </div>
+
+    <div class="row g-4">
+
+      <!-- Colonne gauche : infos produit -->
+      <div class="col-lg-6">
+        <div class="panel-card p-4 h-100">
+
+          <h6 class="text-white fw-bold mb-3">Informations du produit</h6>
+
+          <div class="d-flex gap-3 mb-4">
+            <div class="product-thumb"></div>
+            <div>
+              <h5 class="text-white fw-bold mb-1">{{ produit.nom }}</h5>
+<span class="badge rounded-pill px-3 py-2" [ngClass]="{
+  'text-bg-success': produit.etat === 'disponible',
+  'text-bg-warning text-dark': produit.etat === 'réservé',
+  'text-bg-danger': produit.etat === 'périmé'
+}">
+  <i class="bi me-1" [ngClass]="{
+    'bi-check-circle': produit.etat === 'disponible',
+    'bi-exclamation-triangle': produit.etat === 'réservé',
+    'bi-x-circle': produit.etat === 'périmé'
+  }"></i>
+  {{ produit.etat }}
+</span>
+            </div>
+          </div>
+
+          <div class="info-row">
+            <span class="text-secondary">Quantité</span>
+            <span class="text-white fw-semibold">{{ produit.quantite }} sacs</span>
+          </div>
+
+          <!-- Correction ici : On garde cet élément dans le flux normal -->
+          <div class="bg-secondary bg-opacity-10 rounded-3 p-3 mb-3">
+            <small class="text-secondary">Entrepôt actuel</small>
+            <h6 class="text-white mb-0 mt-1">
+              <i class="bi bi-geo-alt me-1"></i>
+              {{ getNomEntrepot(produit.warehouse) }}
+            </h6>
+          </div>
+
+          <div class="info-row">
+            <span class="text-secondary">Date d'expiration</span>
+            <span class="text-danger fw-semibold">{{ produit.date_expiration }}</span>
+          </div>
+
+          <div class="info-row border-0">
+            <span class="text-secondary">Localisation</span>
+            <span class="text-white fw-semibold">Dakar, Medina</span>
+          </div>
+
+        </div> <!-- Fermeture unique et correcte de panel-card -->
+      </div> <!-- Fermeture de col-lg-6 -->
+
+      <!-- Colonne droite : formulaire + résumé -->
+      <div class="col-lg-6">
+
+        <div class="panel-card p-4 mb-4">
+
+          <h6 class="text-white fw-bold mb-3">
+            <i class="bi bi-arrow-left-right me-2 text-primary"></i>
+            Nouveau transfert
+          </h6>
+
+          <label class="form-label text-light small">Entrepôt de destination</label>
+          <select
+            class="form-select bg-input border-input text-white mb-3"
+            [(ngModel)]="idEntrepot">
+            <option [ngValue]="undefined" disabled selected>Sélectionner un entrepôt...</option>
+            @for (e of entrepots(); track e.id) {
+              <option [ngValue]="e.id">{{ e.nom }} — {{ e.localisation }}</option>
+            }
+          </select>
+
+          <button class="btn btn-primary w-100 py-2 fw-semibold" (click)="transfererProduit()">
+            <i class="bi bi-arrow-left-right me-2"></i>
+            Transférer
+          </button>
+
+        </div>
+
+        @if (idEntrepot) {
+          <div class="panel-card p-4">
+
+            <h6 class="text-white fw-bold mb-3">
+              <i class="bi bi-arrow-left-right me-2 text-primary"></i>
+              Résumé du transfert
+            </h6>
+
+            <div class="resume-box mb-2">
+              <i class="bi bi-box-seam me-2"></i>
+              Entrepôt {{ getNomEntrepot(produit.warehouse) }} → {{ getNomEntrepot(idEntrepot) }}
+            </div>
+
+          </div>
+        }
+
+      </div> <!-- Fermeture de col-lg-6 droite -->
+
+    </div> <!-- Fermeture de row -->
+
+  } @else {
+
+    <p class="text-white text-center">Chargement du produit...</p>
+
+  }
+
+</div>

@@ -1,0 +1,155 @@
+<div class="d-flex vh-100 w-100">
+
+  <!-- Panneau gauche (inchangé) -->
+  <div class="d-none d-lg-flex flex-column justify-content-between p-5 flex-fill bg-panel-left">
+    <div class="d-flex align-items-center gap-2">
+      <div class="d-flex align-items-center justify-content-center bg-white rounded-3" style="width:40px; height:40px;">
+        <i class="bi bi-box-seam-fill text-dark"></i>
+      </div>
+      <div>
+        <div class="text-white fw-semibold">Eco-Stock</div>
+        <div class="text-secondary small">Gestion durable des stocks</div>
+      </div>
+    </div>
+
+    <div style="max-width: 380px;">
+      <div class="d-flex gap-3 mb-4">
+        <div class="icon-box"><i class="bi bi-building"></i></div>
+        <div class="icon-box"><i class="bi bi-diagram-3"></i></div>
+        <div class="icon-box"><i class="bi bi-lock"></i></div>
+      </div>
+      <h1 class="text-white fw-bold mb-3">Une gestion de stock, élégante et efficace.</h1>
+      <p class="text-secondary">
+        Suivez vos entrepôts, produits et transferts en temps réel avec une
+        interface pensée pour les équipes modernes.
+      </p>
+    </div>
+
+    <div class="text-secondary small">© 2026 Eco-Stock. Tous droits réservés.</div>
+  </div>
+
+  <!-- Panneau droit : formulaire -->
+  <div class="d-flex align-items-center justify-content-center flex-fill p-3 bg-panel-right">
+    <div class="card bg-card border-0 rounded-4 p-4 shadow" style="max-width: 400px; width: 100%;">
+
+      <div class="mb-4">
+        <h2 class="text-white fw-bold mb-1">Connexion</h2>
+        <p class="text-secondary small mb-0">Accédez à votre espace de gestion.</p>
+      </div>
+
+      @if (loginError) {
+        <div class="alert alert-danger py-2 small mb-3" role="alert">
+          <i class="bi bi-exclamation-triangle-fill me-1"></i>{{ loginError }}
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+        <!-- Nom d'utilisateur -->
+        <div class="mb-3">
+          <label class="form-label text-light small" for="username">Nom d'utilisateur</label>
+
+          <div class="input-group">
+            <span class="input-group-text bg-input border-input text-secondary">
+              <i class="bi bi-person"></i>
+            </span>
+            <input
+              id="username"
+              type="text"
+              class="form-control bg-input border-input text-white"
+              [class.is-invalid]="form.get('username')?.invalid && form.get('username')?.touched"
+              placeholder="amine.b"
+              formControlName="username"
+              autocomplete="username"
+              maxlength="50"
+              aria-describedby="username-error">
+          </div>
+
+          @if (form.get('username')?.touched && form.get('username')?.invalid) {
+            <small id="username-error" class="text-danger d-block mt-1">
+              @if (form.get('username')?.hasError('required')) {
+                Le nom d'utilisateur est obligatoire.
+              } @else if (form.get('username')?.hasError('minlength')) {
+                Minimum 3 caractères.
+              } @else if (form.get('username')?.hasError('pattern')) {
+                Uniquement lettres, chiffres, points, tirets et underscores.
+              }
+            </small>
+          }
+        </div>
+
+        <!-- Mot de passe -->
+        <div class="mb-3">
+          <div class="d-flex justify-content-between">
+            <label class="form-label text-light small" for="password">Mot de passe</label>
+            <a href="#" class="small text-secondary text-decoration-none">Mot de passe oublié ?</a>
+          </div>
+
+          <div class="input-group">
+            <span class="input-group-text bg-input border-input text-secondary">
+              <i class="bi bi-lock"></i>
+            </span>
+            <input
+              id="password"
+              [type]="showPassword ? 'text' : 'password'"
+              class="form-control bg-input border-input text-white"
+              [class.is-invalid]="form.get('password')?.invalid && form.get('password')?.touched"
+              placeholder="••••••••"
+              formControlName="password"
+              autocomplete="current-password"
+              maxlength="64"
+              aria-describedby="password-error">
+            <span
+              class="input-group-text bg-input border-input text-secondary"
+              style="cursor:pointer;"
+              (click)="showPassword = !showPassword">
+              <i class="bi" [class.bi-eye]="!showPassword" [class.bi-eye-slash]="showPassword"></i>
+            </span>
+          </div>
+
+          @if (form.get('password')?.touched && form.get('password')?.invalid) {
+            <small id="password-error" class="text-danger d-block mt-1">
+              @if (form.get('password')?.hasError('required')) {
+                Le mot de passe est obligatoire.
+              } @else if (form.get('password')?.hasError('minlength')) {
+                Minimum 8 caractères.
+              }
+            </small>
+          }
+        </div>
+
+        <!-- Se souvenir -->
+        <div class="form-check mb-4">
+          <input class="form-check-input" type="checkbox" id="remember">
+          <label class="form-check-label text-light small" for="remember">
+            Se souvenir de moi
+          </label>
+        </div>
+
+        <!-- Bouton -->
+        <div class="d-grid">
+          <button
+            type="submit"
+            class="btn btn-light fw-semibold"
+            [disabled]="form.invalid || submitting">
+            @if (submitting) {
+              <span class="spinner-border spinner-border-sm me-2"></span>Connexion...
+            } @else {
+              Se connecter
+            }
+          </button>
+        </div>
+
+      </form>
+
+      <hr class="border-secondary opacity-25">
+
+      <div class="text-center">
+        <span class="text-secondary small">Pas encore de compte ?</span>
+        <a routerLink="/register" class="text-white fw-semibold small text-decoration-none">Créer un compte</a>
+      </div>
+
+    </div>
+  </div>
+
+</div>
