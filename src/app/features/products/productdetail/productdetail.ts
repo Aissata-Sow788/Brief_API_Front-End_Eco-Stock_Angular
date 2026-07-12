@@ -157,4 +157,8 @@ export class Productdetail implements OnInit {
     }
   }
 
+    retour(): void {
+    this.router.navigate(['/products']);
+  }
+
 }

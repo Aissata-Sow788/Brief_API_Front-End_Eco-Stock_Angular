@@ -12,7 +12,7 @@ import { Router, ActivatedRoute } from '@angular/router';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './producttransfer.html',
-  styleUrl: './producttransfer.css', 
+  styleUrl: './producttransfer.css',
 })
 export class Producttransfer implements OnInit {
   // Signaux réactifs (Signals) pour stocker l'état des données et optimiser la détection des changements
@@ -93,6 +93,6 @@ export class Producttransfer implements OnInit {
 
   // Méthode de navigation explicite pour retourner à l'affichage précédent
   retour(): void {
-    this.router.navigate(['/products', this.idProduit]);
+    this.router.navigate(['/products']);
   }
 }

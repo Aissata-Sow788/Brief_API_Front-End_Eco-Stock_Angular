@@ -1,5 +1,16 @@
 <div class="container py-5">
 
+        <!-- Event Binding (click) déclenchant la méthode retour() du composant -->
+
+<div class="text-start mb-3">
+  <button
+    type="button"
+    class="btn btn-secondary btn-sm"
+    (click)="retour()">
+    <i class="bi bi-arrow-left"></i>
+    Retour
+  </button>
+</div>
   <!-- Condition de contrôle Angular (@if) vérifiant la présence du signal/méthode produitdetail() et l'assignant à la variable 'produit' -->
   @if (produitdetail(); as produit) {
 
@@ -14,6 +25,7 @@
             <i class="bi bi-box fs-1 text-dark"></i>
           </div>
         </div>
+
 
         <!-- Informations -->
         <div class="col-md-8">
