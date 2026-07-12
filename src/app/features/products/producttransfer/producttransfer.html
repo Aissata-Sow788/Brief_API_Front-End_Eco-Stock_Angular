@@ -1,5 +1,6 @@
 <div class="container-fluid p-4">
 
+  <!-- Condition de contrôle Angular (@if) vérifiant la présence du signal moveProduit() et l'affectant à la variable locale 'produit' -->
   @if (moveProduit(); as produit) {
 
     <!-- Header -->
@@ -8,6 +9,7 @@
         <h2 class="text-white fw-bold mb-1">Transférer un produit</h2>
         <p class="text-secondary mb-0">Déplacez ce produit vers un autre entrepôt en quelques clics.</p>
       </div>
+      <!-- Event Binding (click) déclenchant la méthode de retour du composant -->
       <button class="btn btn-outline-light btn-sm" (click)="retour()">
         <i class="bi bi-arrow-left me-1"></i>
         Retour
@@ -25,17 +27,21 @@
           <div class="d-flex gap-3 mb-4">
             <div class="product-thumb"></div>
             <div>
+              <!-- Interpolation (Data Binding) pour afficher le nom du produit -->
               <h5 class="text-white fw-bold mb-1">{{ produit.nom }}</h5>
+<!-- Directive [ngClass] pour assigner dynamiquement les classes CSS de couleur selon l'état du produit -->
 <span class="badge rounded-pill px-3 py-2" [ngClass]="{
   'text-bg-success': produit.etat === 'disponible',
   'text-bg-warning text-dark': produit.etat === 'réservé',
   'text-bg-danger': produit.etat === 'périmé'
 }">
+  <!-- Directive [ngClass] pour modifier dynamiquement l'icône Bootstrap correspondante -->
   <i class="bi me-1" [ngClass]="{
     'bi-check-circle': produit.etat === 'disponible',
     'bi-exclamation-triangle': produit.etat === 'réservé',
     'bi-x-circle': produit.etat === 'périmé'
   }"></i>
+  <!-- Interpolation (Data Binding) pour afficher le libellé textuel de l'état -->
   {{ produit.etat }}
 </span>
             </div>
@@ -43,6 +49,7 @@
 
           <div class="info-row">
             <span class="text-secondary">Quantité</span>
+            <!-- Interpolation (Data Binding) pour afficher la quantité -->
             <span class="text-white fw-semibold">{{ produit.quantite }} sacs</span>
           </div>
 
@@ -51,12 +58,14 @@
             <small class="text-secondary">Entrepôt actuel</small>
             <h6 class="text-white mb-0 mt-1">
               <i class="bi bi-geo-alt me-1"></i>
+              <!-- Interpolation (Data Binding) appelant getNomEntrepot() avec l'ID du warehouse d'origine -->
               {{ getNomEntrepot(produit.warehouse) }}
             </h6>
           </div>
 
           <div class="info-row">
             <span class="text-secondary">Date d'expiration</span>
+            <!-- Interpolation (Data Binding) pour afficher la date d'expiration -->
             <span class="text-danger fw-semibold">{{ produit.date_expiration }}</span>
           </div>
 
@@ -79,15 +88,21 @@
           </h6>
 
           <label class="form-label text-light small">Entrepôt de destination</label>
+          <!-- Liaison bidirectionnelle [(ngModel)] (Two-Way Data Binding) synchronisant l'élément avec la propriété idEntrepot -->
           <select
             class="form-select bg-input border-input text-white mb-3"
             [(ngModel)]="idEntrepot">
+            <!-- Property Binding [ngValue] pour affecter la valeur typée undefined -->
             <option [ngValue]="undefined" disabled selected>Sélectionner un entrepôt...</option>
+
+            <!-- Boucle Angular (@for) parcourant réactivement le signal entrepots() avec suivi d'identifiant unique -->
             @for (e of entrepots(); track e.id) {
+              <!-- Property Binding [ngValue] liant l'ID numérique, et interpolations pour le nom et la localisation -->
               <option [ngValue]="e.id">{{ e.nom }} — {{ e.localisation }}</option>
             }
           </select>
 
+          <!-- Event Binding (click) déclenchant la méthode transfererProduit() du composant -->
           <button class="btn btn-primary w-100 py-2 fw-semibold" (click)="transfererProduit()">
             <i class="bi bi-arrow-left-right me-2"></i>
             Transférer
@@ -95,6 +110,7 @@
 
         </div>
 
+        <!-- Condition Angular (@if) vérifiant si un entrepôt de destination a été choisi pour afficher le résumé -->
         @if (idEntrepot) {
           <div class="panel-card p-4">
 
@@ -105,6 +121,7 @@
 
             <div class="resume-box mb-2">
               <i class="bi bi-box-seam me-2"></i>
+              <!-- Interpolations résolvant les noms des deux entrepôts (actuel et destination) -->
               Entrepôt {{ getNomEntrepot(produit.warehouse) }} → {{ getNomEntrepot(idEntrepot) }}
             </div>
 
@@ -115,7 +132,7 @@
 
     </div> <!-- Fermeture de row -->
 
-  } @else {
+  } @else { <!-- Bloc alternatif (@else) affiché lorsque le signal moveProduit() est null (données en cours de chargement) -->
 
     <p class="text-white text-center">Chargement du produit...</p>
 

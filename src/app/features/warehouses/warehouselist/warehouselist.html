@@ -4,12 +4,14 @@
 
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="text-white fw-bold mb-0">Entrepots</h4>
+    <!-- Property Binding [routerLink] assurant la redirection vers le formulaire de création d'entrepôt -->
     <button class="btn btn-light fw-semibold" [routerLink]="'/warehouseform'">
       + Ajouter un entrepot
     </button>
 
   </div>
 
+    <!-- Boucle Angular (@for) parcourant réactivement le signal warehouse() avec optimisation du suivi par identifiant (track) -->
     @for (entrepot of warehouse(); track entrepot.id) {
 
       <div class="col-md-6 col-lg-4">
@@ -22,10 +24,12 @@
             </div>
           </div>
 
+          <!-- Interpolation (Data Binding) pour afficher le nom de l'entrepôt courant -->
           <h5 class="text-white mt-4 mb-1">{{ entrepot.nom }}</h5>
 
           <p class="text-secondary">
             <i class="bi bi-geo-alt"></i>
+            <!-- Interpolation (Data Binding) pour afficher la localisation de l'entrepôt courant -->
             {{ entrepot.localisation }}
           </p>
 
@@ -33,21 +37,25 @@
             <div class="col-6">
               <div class="info-box">
                 <small>Capacité</small>
+                <!-- Interpolation (Data Binding) pour afficher la capacité de l'entrepôt courant -->
                 <h6>{{ entrepot.capacite }}</h6>
               </div>
             </div>
           </div>
 
           <div class="d-flex gap-2">
+            <!-- Property Binding [routerLink] générant la route dynamique vers la liste des produits de cet entrepôt -->
             <button
               class="btn btn-light flex-grow-1"
               [routerLink]="['/products', entrepot.id]">
               Voir les produits
             </button>
 
+          <!-- Property Binding [routerLink] générant la route dynamique pour modifier cet entrepôt spécifique -->
           <button class="btn btn-outline-light" [routerLink]="['/warehouseform', entrepot.id]">
             <i class="bi bi-pencil"></i>
           </button>
+            <!-- Event Binding (click) interceptant le clic pour exécuter la méthode onDelete() du composant -->
             <button class="btn btn-outline-danger" (click)="onDelete(entrepot.id)">
               <i class="bi bi-trash"></i>
             </button>
@@ -57,7 +65,7 @@
 
       </div>
 
-    } @empty {
+    } @empty { <!-- Bloc alternatif (@empty) s'affichant si la collection du signal warehouse() ne contient aucun élément -->
       <div class="col-12">
         <div class="alert alert-warning">Aucun entrepôt trouvé.</div>
       </div>

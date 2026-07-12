@@ -7,104 +7,154 @@ import { WarehouseService } from '../../../core/services/warehouse.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
+  // Nom du composant utilisé dans les templates HTML
   selector: 'app-productdetail',
+
+  // Modules importés et utilisés dans le template
   imports: [CommonModule, RouterLink],
+
+  // Fichier HTML associé au composant
   templateUrl: './productdetail.html',
+
+  // Fichier CSS associé au composant
   styleUrl: './productdetail.css',
 })
-export class Productdetail implements OnInit{
- produit = signal<Product[]>([]);
-  produitdetail = signal<Product | null>(null);   // un seul produit, pas un tableau
-    entrepots = signal<Warehouse[]>([])
+export class Productdetail implements OnInit {
 
-        idProduit!: number;
+  // Signal contenant la liste des produits
+  produit = signal<Product[]>([]);
+
+  // Signal contenant le produit sélectionné
+  produitdetail = signal<Product | null>(null);
+
+  // Signal contenant la liste des entrepôts
+  entrepots = signal<Warehouse[]>([]);
+
+  // Identifiant du produit
+  idProduit!: number;
+
+  // Identifiant de l'entrepôt sélectionné
   idEntrepot!: number;
 
-
-  constructor(private productservice: ProductService,
+  // Injection des services nécessaires
+  constructor(
+    private productservice: ProductService,
     private routes: ActivatedRoute,
     private router: Router,
     private warehouseService: WarehouseService
-  ){}
+  ) {}
 
+  // Méthode exécutée automatiquement au chargement du composant
   ngOnInit(): void {
+
+    // Récupère l'identifiant du produit dans l'URL
     const id = Number(this.routes.snapshot.paramMap.get('id'));
 
+    // Récupère les informations du produit correspondant
     this.productservice.getProduit(id).subscribe({
+
+      // Si la récupération réussit
       next: (data: Product) => {
-        this.produitdetail.set(data)
+
+        // Stocke le produit dans le signal
+        this.produitdetail.set(data);
+
         console.log(data);
-      }, error: (err) => {
-      console.error(err);
-    }
-    })
-         this.warehouseService.getWarehouse().subscribe({
+      },
+
+      // Gestion des erreurs
+      error: (err) => {
+        console.error(err);
+      }
+    });
+
+    // Récupère la liste des entrepôts
+    this.warehouseService.getWarehouse().subscribe({
+
+      // Met à jour le signal contenant les entrepôts
       next: (data) => this.entrepots.set(data),
+
+      // Gestion des erreurs
       error: (err) => console.error('Erreur récupération entrepôts', err)
     });
   }
 
+  // Retourne le nom de l'entrepôt à partir de son identifiant
   getNomEntrepot(id: number): string {
+
+    // Recherche l'entrepôt correspondant
     const entrepot = this.entrepots().find(e => e.id === id);
+
+    // Retourne son nom ou "Inconnu" s'il n'existe pas
     return entrepot ? entrepot.nom : 'Inconnu';
   }
 
-        // Optionnel : retourner à la liste des entrepôts en cas d'annulation
+  // Redirige l'utilisateur vers la liste des entrepôts
   onAnnuler(): void {
     this.router.navigate(['/entrepot']);
   }
 
+  // Transfère un produit vers un autre entrepôt
   transfererProduit(idProduit: number): void {
 
-  if (!this.idEntrepot) {
-    alert("Veuillez sélectionner un entrepôt.");
-    return;
+    // Vérifie qu'un entrepôt a été sélectionné
+    if (!this.idEntrepot) {
+      alert("Veuillez sélectionner un entrepôt.");
+      return;
+    }
+
+    // Appelle le service pour effectuer le transfert
+    this.productservice.transferProduit(idProduit, this.idEntrepot)
+      .subscribe({
+
+        // Si le transfert réussit
+        next: (produit) => {
+
+          alert("Produit transféré avec succès.");
+
+          // Retire le produit de la liste affichée
+          this.produit.update(liste =>
+            liste.filter(p => p.id !== produit.id)
+          );
+        },
+
+        // Gestion des erreurs
+        error: (err) => {
+          alert(err.error?.error || "Erreur lors du transfert.");
+        }
+
+      });
   }
 
-  this.productservice.transferProduit(idProduit, this.idEntrepot)
-    .subscribe({
+  // Supprime un produit
+  onDelete(id: number): void {
 
-      next: (produit) => {
+    // Demande une confirmation avant la suppression
+    if (confirm('Voulez-vous vraiment supprimer ce produit ?')) {
 
-        alert("Produit transféré avec succès.");
+      // Convertit l'identifiant en nombre
+      const cleanId = Number(id);
 
-        // Retirer le produit de la liste actuelle
-        this.produit.update(liste =>
-          liste.filter(p => p.id !== produit.id)
-        );
+      // Appelle le service de suppression
+      this.productservice.deleteData(cleanId).subscribe({
 
-      },
+        // Si la suppression réussit
+        next: () => {
 
-      error: (err) => {
+          alert('Produit supprimé avec succès !');
 
-        alert(err.error?.error || "Erreur lors du transfert.");
+          // Met à jour la liste des produits
+          this.produit.update(liste =>
+            liste.filter(p => p.id !== cleanId)
+          );
+        },
 
-      }
-
-    });
-
-}
-
-
-onDelete(id: number): void {
-  if (confirm('Voulez-vous vraiment supprimer ce produit ?')) {
-
-    // Assurez-vous que l'id est un nombre propre
-    const cleanId = Number(id);
-
-    this.productservice.deleteData(cleanId).subscribe({
-      next: () => {
-        alert('Produit supprimé avec succès !');
-
-        // Si vous utilisez un signal pour votre liste de produits :
-        this.produit.update(liste => liste.filter(p => p.id !== cleanId));
-      },
-      error: (err) => {
-        console.error('Erreur lors de la suppression', err);
-      }
-    });
+        // Gestion des erreurs
+        error: (err) => {
+          console.error('Erreur lors de la suppression', err);
+        }
+      });
+    }
   }
-}
-
 
 }

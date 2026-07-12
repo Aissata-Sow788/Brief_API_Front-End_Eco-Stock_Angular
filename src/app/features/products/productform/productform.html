@@ -4,22 +4,28 @@
       <h2 class="form-title mb-1">Nouveau produit</h2>
       <p class="form-subtitle mb-0">Renseignez les informations de l'entrepôt.</p>
     </div>
+    <!-- Event Binding (click) déclenchant la méthode de réinitialisation et de redirection onAnnuler() -->
     <button type="button" class="btn-close btn-close-white btn-sm" aria-label="Close" (click)="onAnnuler()"></button>
   </div>
 
+  <!-- Property Binding [formGroup] liant l'élément HTML à l'instance FormGroup du composant, et Event Binding (ngSubmit) capturant la soumission -->
   <form [formGroup]="form" (ngSubmit)="onAjouter()">
 
     <div class="mb-3">
       <label for="nom" class="form-label custom-label">Nom</label>
+      <!-- Directive formControlName associant ce champ de saisie au contrôle réactif 'nom' -->
       <input type="text" id="nom" class="form-control custom-input" formControlName="nom" placeholder="Entrepôt Nord">
     </div>
 
     <div class="mb-3">
       <label for="quantite" class="form-label custom-label">Quantite</label>
+      <!-- Directive formControlName associant ce champ de saisie au contrôle réactif 'quantite' -->
       <input type="number" id="quantite" class="form-control custom-input" formControlName="quantite" placeholder="120">
     </div>
 
+<!-- Directive formControlName associant la liste déroulante au contrôle réactif 'etat' -->
 <select class="form-select bg-dark border-input text-white" formControlName="etat">
+  <!-- Property Binding [ngValue] permettant d'affecter une vraie valeur typée (null) à la place d'une simple chaîne de caractères -->
   <option [ngValue]="null" disabled>Sélectionner un état</option>
   <option value="disponible">Disponible</option>
   <option value="réservé">Réservé</option>
@@ -33,22 +39,30 @@
 
 <div class="mb-4">
   <label class="form-label text-light small">Warehouse</label>
+  <!-- Directive formControlName associant cette sélection au contrôle réactif 'warehouse' -->
   <select
     class="form-select bg-dark border-input text-white"
     formControlName="warehouse">
+    <!-- Property Binding [ngValue] affectant null comme valeur de l'option de base -->
     <option [ngValue]="null" disabled>Sélectionner un entrepôt</option>
+
+    <!-- Boucle Angular (@for) parcourant réactivement le signal entrepots() avec suivi par clé unique (track e.id) -->
     @for (e of entrepots(); track e.id) {
+      <!-- Property Binding [ngValue] assignant l'ID numérique de l'entrepôt courant, et interpolation pour afficher son nom -->
       <option [ngValue]="e.id">{{ e.nom }}</option>
     }
   </select>
 
+  <!-- Condition de contrôle Angular (@if) vérifiant si le contrôle a été manipulé (touched) et s'il présente l'erreur 'required' -->
   @if (form.get('warehouse')?.touched && form.get('warehouse')?.hasError('required')) {
     <small class="text-danger">L'entrepôt est obligatoire.</small>
   }
 </div>
 
     <div class="d-flex justify-content-end align-items-center gap-2">
+      <!-- Event Binding (click) déclenchant la fonction d'annulation -->
       <button type="button" class="btn btn-annuler" (click)="onAnnuler()">Annuler</button>
+      <!-- Property Binding [disabled] qui désactive mécaniquement le bouton si l'état de validation du formulaire (form.invalid) est vrai -->
       <button type="submit" class="btn btn-ajouter" [disabled]="form.invalid">Ajouter</button>
     </div>
 

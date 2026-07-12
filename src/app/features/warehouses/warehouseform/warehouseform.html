@@ -4,32 +4,38 @@
       <h2 class="form-title mb-1">Nouvel entrepot</h2>
       <p class="form-subtitle mb-0">Renseignez les informations de l'entrepôt.</p>
     </div>
+    <!-- Event Binding (click) déclenchant la méthode de réinitialisation et de redirection onAnnuler() -->
     <button type="button" class="btn-close btn-close-white btn-sm" aria-label="Close" (click)="onAnnuler()"></button>
   </div>
 
+  <!-- Property Binding [formGroup] liant le formulaire HTML à l'instance FormGroup du composant, et Event Binding (ngSubmit) interceptant la soumission pour lancer onAjout() -->
   <form [formGroup]="form" (ngSubmit)="onAjout()">
 
     <div class="mb-3">
       <label for="nom" class="form-label custom-label">Nom</label>
+      <!-- Directive formControlName liant ce champ de saisie au contrôle réactif 'nom' -->
       <input type="text" id="nom" class="form-control custom-input" formControlName="nom" placeholder="Entrepôt Nord">
     </div>
 
     <div class="mb-3">
       <label for="quantite" class="form-label custom-label">Localisation</label>
+      <!-- Directive formControlName liant ce champ de saisie au contrôle réactif 'localisation' -->
       <input type="text" id="quantite" class="form-control custom-input" formControlName="localisation" placeholder="120">
     </div>
 
 
     <div class="mb-4">
       <label for="warehouse" class="form-label custom-label">Capacite</label>
+      <!-- Directive formControlName liant ce champ numérique au contrôle réactif 'capacite' -->
       <input type="number" class="form-control custom-input" formControlName="capacite" placeholder="Entrepot Dakar">
     </div>
 
     <div class="d-flex justify-content-end align-items-center gap-2">
+      <!-- Event Binding (click) déclenchant la fonction d'annulation -->
       <button type="button" class="btn btn-annuler" (click)="onAnnuler()">Annuler</button>
+      <!-- Property Binding [disabled] désactivant le bouton si l'état de validation globale du formulaire (form.invalid) est vrai -->
       <button type="submit" class="btn btn-ajouter" [disabled]="form.invalid">Ajouter</button>
     </div>
 
   </form>
 </div>
-

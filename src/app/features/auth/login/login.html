@@ -37,12 +37,15 @@
         <p class="text-secondary small mb-0">Accédez à votre espace de gestion.</p>
       </div>
 
+      <!-- Angular : affiche ce bloc uniquement si loginError contient un message -->
       @if (loginError) {
         <div class="alert alert-danger py-2 small mb-3" role="alert">
+          <!-- Angular : interpolation, affiche la valeur de loginError -->
           <i class="bi bi-exclamation-triangle-fill me-1"></i>{{ loginError }}
         </div>
       }
 
+      <!-- Angular : lie ce formulaire au FormGroup et appelle onSubmit() lors de la soumission -->
       <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
 
         <!-- Nom d'utilisateur -->
@@ -57,20 +60,34 @@
               id="username"
               type="text"
               class="form-control bg-input border-input text-white"
+
+
               [class.is-invalid]="form.get('username')?.invalid && form.get('username')?.touched"
+
               placeholder="amine.b"
+
+
               formControlName="username"
+
               autocomplete="username"
               maxlength="50"
-              aria-describedby="username-error">
+              aria-describedby="username-error">  <!-- Angular : ajoute la classe is-invalid si le champ est invalide -->
+                <!-- Angular : lie ce champ au contrôle username du formulaire -->
           </div>
 
+          <!-- Angular : affiche les erreurs uniquement si le champ est invalide -->
           @if (form.get('username')?.touched && form.get('username')?.invalid) {
             <small id="username-error" class="text-danger d-block mt-1">
+
+              <!-- Angular : vérifie si le champ est obligatoire -->
               @if (form.get('username')?.hasError('required')) {
                 Le nom d'utilisateur est obligatoire.
+
+              <!-- Angular : vérifie la longueur minimale -->
               } @else if (form.get('username')?.hasError('minlength')) {
                 Minimum 3 caractères.
+
+              <!-- Angular : vérifie le format -->
               } @else if (form.get('username')?.hasError('pattern')) {
                 Uniquement lettres, chiffres, points, tirets et underscores.
               }
@@ -89,31 +106,56 @@
             <span class="input-group-text bg-input border-input text-secondary">
               <i class="bi bi-lock"></i>
             </span>
+
+             <!-- Angular : change le type du champ selon showPassword -->
             <input
               id="password"
+
+
               [type]="showPassword ? 'text' : 'password'"
+
               class="form-control bg-input border-input text-white"
+
+
               [class.is-invalid]="form.get('password')?.invalid && form.get('password')?.touched"
+
               placeholder="••••••••"
+
+
               formControlName="password"
+
               autocomplete="current-password"
               maxlength="64"
-              aria-describedby="password-error">
+              aria-describedby="password-error"> <!-- Angular : ajoute la classe is-invalid si le champ est invalide -->
+            <!-- Angular : lie ce champ au contrôle password -->
+             <!-- Angular : Event Binding, inverse la valeur de showPassword au clic -->
             <span
               class="input-group-text bg-input border-input text-secondary"
               style="cursor:pointer;"
               (click)="showPassword = !showPassword">
-              <i class="bi" [class.bi-eye]="!showPassword" [class.bi-eye-slash]="showPassword"></i>
+
+              <!-- Angular : change dynamiquement l'icône -->
+              <i class="bi"
+                [class.bi-eye]="!showPassword"
+                [class.bi-eye-slash]="showPassword">
+              </i>
+
             </span>
           </div>
 
+          <!-- Angular : affiche les erreurs du mot de passe -->
           @if (form.get('password')?.touched && form.get('password')?.invalid) {
             <small id="password-error" class="text-danger d-block mt-1">
+
+              <!-- Angular : vérifie si le champ est vide -->
               @if (form.get('password')?.hasError('required')) {
                 Le mot de passe est obligatoire.
+
+              <!-- Angular : vérifie la longueur minimale -->
               } @else if (form.get('password')?.hasError('minlength')) {
                 Minimum 8 caractères.
               }
+
             </small>
           }
         </div>
@@ -128,15 +170,23 @@
 
         <!-- Bouton -->
         <div class="d-grid">
+            <!-- Angular : désactive le bouton si le formulaire est invalide ou si une requête est en cours -->
           <button
             type="submit"
             class="btn btn-light fw-semibold"
+
+
             [disabled]="form.invalid || submitting">
+
+            <!-- Angular : affiche un spinner pendant la connexion -->
             @if (submitting) {
               <span class="spinner-border spinner-border-sm me-2"></span>Connexion...
+
+            <!-- Angular : sinon affiche le texte normal -->
             } @else {
               Se connecter
             }
+
           </button>
         </div>
 
@@ -146,7 +196,12 @@
 
       <div class="text-center">
         <span class="text-secondary small">Pas encore de compte ?</span>
-        <a routerLink="/register" class="text-white fw-semibold small text-decoration-none">Créer un compte</a>
+
+        <!-- Angular : navigation vers la page register sans recharger l'application -->
+        <a routerLink="/register" class="text-white fw-semibold small text-decoration-none">
+          Créer un compte
+        </a>
+
       </div>
 
     </div>

@@ -220,18 +220,6 @@ de succès d'erreur
 
 ---
 
-# Captures d'écran
-
-Vous pouvez ajouter ici des captures d'écran de :
-
-* La page de connexion.
-* La liste des entrepôts.
-* La liste des produits.
-* Le formulaire d'ajout d'un produit.
-* La page de détail d'un produit.
-* La page de transfert d'un produit.
-
----
 
 # Auteur
 

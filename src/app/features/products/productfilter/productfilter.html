@@ -1,17 +1,20 @@
 <div class="container-fluid p-4">
 
+  <!-- Interpolation (Data Binding) lisant de manière réactive la longueur du signal produit() -->
   <p class="text-white">DEBUG: {{ produit().length }} produits chargés</p>
 
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="text-white fw-bold mb-0">Produits</h4>
 
     <div class="d-flex gap-2">
+      <!-- Property Binding [routerLink] pour rediriger vers le formulaire d'ajout -->
       <button
         class="btn btn-light fw-semibold"
         [routerLink]="'/produitform'">
         + Ajouter un produit
       </button>
 
+      <!-- Event Binding (click) déclenchant la méthode onAnnuler() du composant -->
       <button
         type="button"
         class="btn btn-secondary btn-sm"
@@ -24,6 +27,7 @@
 
   <div class="row g-4">
 
+    <!-- Boucle Angular (@for) itérant sur le signal produit() avec optimisation du suivi par identifiant (track) -->
     @for (product of produit(); track product.id) {
 
       <div class="col-md-4">
@@ -37,16 +41,19 @@
               <i class="bi bi-box fs-4"></i>
             </div>
 
+<!-- Directive [ngClass] pour ajouter dynamiquement des classes de badge Bootstrap selon l'état du produit -->
 <span class="badge rounded-pill px-3 py-2" [ngClass]="{
   'text-bg-success': product.etat === 'disponible',
   'text-bg-warning text-dark': product.etat === 'réservé',
   'text-bg-danger': product.etat === 'périmé'
 }">
+  <!-- Directive [ngClass] pour charger l'icône Bootstrap correspondante à l'état actuel -->
   <i class="bi me-1" [ngClass]="{
     'bi-check-circle': product.etat === 'disponible',
     'bi-exclamation-triangle': product.etat === 'réservé',
     'bi-x-circle': product.etat === 'périmé'
   }"></i>
+  <!-- Interpolation (Data Binding) pour afficher la valeur textuelle de l'état -->
   {{ product.etat }}
 </span>
 
@@ -54,6 +61,7 @@
 
           <!-- Nom -->
           <div class="mt-3">
+            <!-- Interpolation (Data Binding) pour le nom du produit courant -->
             <h4 class="fw-bold mb-1">{{ product.nom }}</h4>
             <p class="text-secondary mb-0">Produits laitiers</p>
           </div>
@@ -65,6 +73,7 @@
               <div class="bg-secondary bg-opacity-10 rounded-3 p-3">
                 <small class="text-secondary">Quantité</small>
                 <h5 class="fw-bold mb-0">
+                  <!-- Interpolation (Data Binding) pour la quantité du produit courant -->
                   {{ product.quantite }}
                 </h5>
               </div>
@@ -89,6 +98,7 @@
           <!-- Boutons -->
           <div class="d-flex gap-2">
 
+            <!-- Property Binding [routerLink] générant la route dynamique vers les détails du produit -->
             <button
               class="btn btn-outline-light flex-grow-1"
               [routerLink]="['/productdetail', product.id]">
@@ -97,18 +107,22 @@
             </button>
 
 
+<!-- Combinaison de Property Binding [routerLink] pour la navigation et d'Event Binding (click) exécutant transfererProduit() -->
 <button
   class="btn btn-outline-primary w-80 py-32 rounded-3"
   [routerLink]="['/transfer', product.id]"
   (click)="transfererProduit(product.id)">
   <i class="bi bi-arrow-left-right me-2"></i>
 </button>
+
+<!-- Property Binding [routerLink] pour la route dynamique vers le formulaire d'édition -->
 <button
   class="btn btn-outline-light"
   [routerLink]="['/produitform', product.id]">
   <i class="bi bi-pencil"></i>
 </button>
 
+<!-- Event Binding (click) interceptant le clic pour lancer la méthode onDelete() -->
 <button
   class="btn btn-outline-danger"
   (click)="onDelete(product.id)">
@@ -121,7 +135,7 @@
 
       </div>
 
-    } @empty {
+    } @empty { <!-- Bloc alternatif (@empty) affiché si le tableau produit() ne contient aucun élément -->
 
       <div class="col-12">
 

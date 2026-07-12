@@ -3,6 +3,7 @@
 
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="text-white fw-bold mb-0">Produits</h4>
+    <!-- Property Binding [routerLink] assurant la redirection vers la route du formulaire de création -->
     <button class="btn btn-light fw-semibold" [routerLink]="'/produitform'">
       + Ajouter un produit
     </button>
@@ -11,6 +12,7 @@
 
   <div class="row g-4">
 
+    <!-- Boucle Angular (@for) itérant de manière réactive sur le signal produit() avec optimisation via le track -->
     @for (product of produit(); track product.id) {
 
       <div class="col-md-4">
@@ -20,21 +22,25 @@
             <div class="bg-secondary bg-opacity-25 rounded-3 p-3">
               <i class="bi bi-box fs-4"></i>
             </div>
+<!-- Directive [ngClass] appliquant la couleur du badge Bootstrap en fonction de l'état du produit -->
 <span class="badge rounded-pill px-3 py-2" [ngClass]="{
   'text-bg-success': product.etat === 'disponible',
   'text-bg-warning text-dark': product.etat === 'réservé',
   'text-bg-danger': product.etat === 'périmé'
 }">
+  <!-- Directive [ngClass] modifiant l'icône Bootstrap affichée selon l'état actuel -->
   <i class="bi me-1" [ngClass]="{
     'bi-check-circle': product.etat === 'disponible',
     'bi-exclamation-triangle': product.etat === 'réservé',
     'bi-x-circle': product.etat === 'périmé'
   }"></i>
+  <!-- Interpolation (Data Binding) pour afficher le libellé de l'état -->
   {{ product.etat }}
 </span>
           </div>
 
           <div class="mt-3">
+            <!-- Interpolation (Data Binding) pour afficher le nom du produit courant -->
             <h4 class="fw-bold mb-1">{{ product.nom }}</h4>
             <p class="text-secondary mb-0">Produits laitiers</p>
           </div>
@@ -43,6 +49,7 @@
             <div class="col-6">
               <div class="bg-secondary bg-opacity-10 rounded-3 p-3">
                 <small class="text-secondary">Quantité</small>
+                <!-- Interpolation (Data Binding) pour afficher la quantité -->
                 <h5 class="fw-bold mb-0">{{ product.quantite }}</h5>
               </div>
             </div>
@@ -51,6 +58,7 @@
               <small class="text-secondary">Entrepôt</small>
               <h6 class=" mb-0">
                 <i class="bi bi-geo-alt"></i>
+                <!-- Interpolation (Data Binding) appelant la méthode getNomEntrepot() avec l'identifiant du warehouse -->
                 {{ getNomEntrepot(product.warehouse) }}
               </h6>
             </div>
@@ -60,22 +68,25 @@
           <hr class="border-secondary">
 
           <div class="d-flex gap-2">
+            <!-- Property Binding [routerLink] pour la route dynamique vers le détail du produit -->
             <button class="btn btn-outline-light flex-grow-1 rounded-3" [routerLink]="['/productdetail', product.id]">
               <i class="bi bi-eye me-2"></i>
               Details
             </button>
+<!-- Property Binding [routerLink] pour la route dynamique vers le formulaire de transfert -->
 <button
   class="btn btn-outline-primary w-80 py-32 rounded-3"
   [routerLink]="['/transfer', product.id]">
   <i class="bi bi-arrow-left-right me-2"></i>
 
 </button>
+<!-- Property Binding [routerLink] pour la route dynamique vers le formulaire de modification -->
 <button
   class="btn btn-outline-light"
   [routerLink]="['/produitform', product.id]">
   <i class="bi bi-pencil"></i>
 </button>
-<!-- Exemple de bouton de suppression propre -->
+<!-- Event Binding (click) interceptant le clic de souris pour déclencher la méthode de suppression onDelete() -->
 <button
   class="btn btn-outline-danger"
   (click)="onDelete(product.id)">
@@ -86,7 +97,7 @@
         </div>
       </div>
 
-    } @empty {
+    } @empty { <!-- Bloc alternatif (@empty) s'affichant si la collection du signal produit() ne contient aucun élément -->
       <div class="col-12">
         <div class="alert alert-warning">Aucun produit trouvé pour cet entrepôt.</div>
       </div>
@@ -94,8 +105,10 @@
 
   </div>
 
+  <!-- Directive structurelle *ngIf affichant ou masquant la modale selon la valeur booléenne de showModal -->
   <div class="modal-backdrop-custom" *ngIf="showModal">
     <div class="modal-wrapper">
+      <!-- Composant enfant app-productform avec écouteurs d'événements personnalisés (Event Binding @Output) -->
       <app-productform
         (fermer)="showModal = false"
         (produitAjoute)="onAjoutProduit($event)">
