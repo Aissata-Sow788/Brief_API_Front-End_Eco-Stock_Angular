@@ -6,6 +6,8 @@ import { WarehouseService } from '../../../core/services/warehouse.service';
 import { Product } from '../../../core/models/product';
 import { Warehouse } from '../../../core/models/warehouse';
 import { Router, ActivatedRoute } from '@angular/router';
+import { validate } from '@angular/forms/signals';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
 
 // Métadonnées du composant Angular décoré par @Component
 @Component({
@@ -25,6 +27,7 @@ export class Productform implements OnInit {
   // Variables d'état interne pour basculer entre la création et la modification
   isEditMode = false;
   idProduit!: number;
+  today = new Date().toISOString().split('T')[0];
 
   // Initialisation d'un formulaire réactif (Reactive Forms) avec des contrôles typés et validateurs
   form = new FormGroup({
@@ -34,6 +37,10 @@ export class Productform implements OnInit {
       Validators.pattern('^[0-9]+$'), // Expression régulière limitant la saisie aux entiers positifs
       Validators.min(1)
     ]),
+    date_expiration: new FormControl('', [
+  Validators.required
+
+]),
     etat: new FormControl<'disponible' | 'réservé' | 'périmé' | null>(
       null,
       Validators.required
@@ -73,12 +80,13 @@ export class Productform implements OnInit {
           const produitAModifier = produits.find(p => p.id === this.idProduit);
           if (produitAModifier) {
             // Remplissage partiel ou total du formulaire Angular avec les valeurs de l'objet trouvé
-            this.form.patchValue({
-              nom: produitAModifier.nom,
-              quantite: produitAModifier.quantite,
-              etat: produitAModifier.etat,
-              warehouse: produitAModifier.warehouse
-            });
+              this.form.patchValue({
+                nom: produitAModifier.nom,
+                quantite: produitAModifier.quantite,
+                date_expiration: produitAModifier.date_expiration.split('T')[0],
+                etat: produitAModifier.etat,
+                warehouse: produitAModifier.warehouse
+              });
           }
         },
         error: (err) => console.error('Erreur chargement du produit', err)
@@ -98,7 +106,7 @@ export class Productform implements OnInit {
         quantite: Number(this.form.value.quantite),
         etat: this.form.value.etat as 'disponible' | 'réservé' | 'périmé',
         warehouse: Number(this.form.value.warehouse),
-        date_expiration: new Date().toISOString().split('T')[0]
+       date_expiration: this.form.value.date_expiration!
       };
 
     if (this.isEditMode) {
@@ -109,8 +117,8 @@ export class Productform implements OnInit {
       this.produitservice.updateProduit(this.idProduit, produitComplet).subscribe({
         next: () => {
           alert("Produit mis à jour avec succès !");
-          // Redirection dynamique basée sur la valeur saisie dans le contrôle 'warehouse'
-          this.router.navigate(['/products', produitData.warehouse]);
+          // Redirection dynamique basée sur la valeur saisie dans le contrôle 'products'
+          this.router.navigate(['/products']);
         },
         error: (err) => {
           console.error('Erreur modification produit', err);
@@ -125,7 +133,7 @@ export class Productform implements OnInit {
             // Déclenchement de l'événement Output pour notifier le composant parent
             this.produitAjoute.emit(produitcreer);
             // Redirection vers l'espace de gestion de l'entrepôt concerné
-            this.router.navigate(['/products', produitData.warehouse]);
+            this.router.navigate(['/products']);
           },
           error: (err) => console.error('Erreur création produit', err)
         });

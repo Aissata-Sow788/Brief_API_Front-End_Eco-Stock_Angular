@@ -1,8 +1,17 @@
 <div class="container-fluid p-4">
 
 
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="text-white fw-bold mb-0">Produits</h4>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div class="mb-4">
+        <h2 class="text-white fw-bold">
+          <!-- Le nom de l'entrepot -->
+          {{ nomEntrepot() }}
+        </h2>
+
+        <p class="text-secondary">
+          Liste des produits de cet entrepôt
+        </p>
+      </div>
 
     <div class="d-flex gap-2">
       <!-- Property Binding [routerLink] pour rediriger vers le formulaire d'ajout -->
@@ -39,21 +48,21 @@
               <i class="bi bi-box fs-4"></i>
             </div>
 
-<!-- Directive [ngClass] pour ajouter dynamiquement des classes de badge Bootstrap selon l'état du produit -->
-<span class="badge rounded-pill px-3 py-2" [ngClass]="{
-  'text-bg-success': product.etat === 'disponible',
-  'text-bg-warning text-dark': product.etat === 'réservé',
-  'text-bg-danger': product.etat === 'périmé'
-}">
-  <!-- Directive [ngClass] pour charger l'icône Bootstrap correspondante à l'état actuel -->
-  <i class="bi me-1" [ngClass]="{
-    'bi-check-circle': product.etat === 'disponible',
-    'bi-exclamation-triangle': product.etat === 'réservé',
-    'bi-x-circle': product.etat === 'périmé'
-  }"></i>
-  <!-- Interpolation (Data Binding) pour afficher la valeur textuelle de l'état -->
-  {{ product.etat }}
-</span>
+              <!-- Directive [ngClass] pour ajouter dynamiquement des classes de badge Bootstrap selon l'état du produit -->
+              <span class="badge rounded-pill px-3 py-2" [ngClass]="{
+                'text-bg-success': product.etat === 'disponible',
+                'text-bg-warning text-dark': product.etat === 'réservé',
+                'text-bg-danger': product.etat === 'périmé'
+              }">
+                <!-- Directive [ngClass] pour charger l'icône Bootstrap correspondante à l'état actuel -->
+                <i class="bi me-1" [ngClass]="{
+                  'bi-check-circle': product.etat === 'disponible',
+                  'bi-exclamation-triangle': product.etat === 'réservé',
+                  'bi-x-circle': product.etat === 'périmé'
+                }"></i>
+                <!-- Interpolation (Data Binding) pour afficher la valeur textuelle de l'état -->
+                {{ product.etat }}
+              </span>
 
           </div>
 
@@ -76,19 +85,6 @@
                 </h5>
               </div>
             </div>
-
-            <!-- <div class="col-6">
-              <div class="bg-secondary bg-opacity-10 rounded-3 p-3">
-                <small class="text-secondary">Entrepôt</small>
-                <h6 class="mb-0">
-                  <i class="bi bi-geo-alt"></i>
-                  {{ getNomEntrepot(product.warehouse) }}
-                </h6>
-              </div>
-            </div> -->
-
-
-
           </div>
 
           <hr class="border-secondary">
@@ -105,27 +101,27 @@
             </button>
 
 
-<!-- Combinaison de Property Binding [routerLink] pour la navigation et d'Event Binding (click) exécutant transfererProduit() -->
-<button
-  class="btn btn-outline-primary w-80 py-32 rounded-3"
-  [routerLink]="['/transfer', product.id]"
-  (click)="transfererProduit(product.id)">
-  <i class="bi bi-arrow-left-right me-2"></i>
-</button>
+              <!-- Combinaison de Property Binding [routerLink] pour la navigation et d'Event Binding (click) exécutant transfererProduit() -->
+              <button
+                class="btn btn-outline-primary w-80 py-32 rounded-3"
+                [routerLink]="['/transfer', product.id]"
+                (click)="transfererProduit(product.id)">
+                <i class="bi bi-arrow-left-right me-2"></i>
+              </button>
 
-<!-- Property Binding [routerLink] pour la route dynamique vers le formulaire d'édition -->
-<button
-  class="btn btn-outline-light"
-  [routerLink]="['/produitform', product.id]">
-  <i class="bi bi-pencil"></i>
-</button>
+              <!-- Property Binding [routerLink] pour la route dynamique vers le formulaire d'édition -->
+              <button
+                class="btn btn-outline-light"
+                [routerLink]="['/produitform', product.id]">
+                <i class="bi bi-pencil"></i>
+              </button>
 
-<!-- Event Binding (click) interceptant le clic pour lancer la méthode onDelete() -->
-<button
-  class="btn btn-outline-danger"
-  (click)="onDelete(product.id)">
-  <i class="bi bi-trash"></i>
-</button>
+              <!-- Event Binding (click) interceptant le clic pour lancer la méthode onDelete() -->
+              <button
+                class="btn btn-outline-danger"
+                (click)="onDelete(product.id)">
+                <i class="bi bi-trash"></i>
+              </button>
 
           </div>
 

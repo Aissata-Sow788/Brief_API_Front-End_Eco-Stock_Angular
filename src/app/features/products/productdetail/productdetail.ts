@@ -126,30 +126,20 @@ export class Productdetail implements OnInit {
       });
   }
 
-  // Supprime un produit
+ // Suppression physique d'un produit ciblé par son identifiant unique
   onDelete(id: number): void {
-
-    // Demande une confirmation avant la suppression
     if (confirm('Voulez-vous vraiment supprimer ce produit ?')) {
 
-      // Convertit l'identifiant en nombre
+      // Forçage du typage de la variable numérique pour parer aux anomalies de typage JS
       const cleanId = Number(id);
 
-      // Appelle le service de suppression
+      // Traitement asynchrone de la suppression via l'Observable du service
       this.productservice.deleteData(cleanId).subscribe({
-
-        // Si la suppression réussit
         next: () => {
-
           alert('Produit supprimé avec succès !');
 
-          // Met à jour la liste des produits
-          this.produit.update(liste =>
-            liste.filter(p => p.id !== cleanId)
-          );
+          this.router.navigate(['/products']);
         },
-
-        // Gestion des erreurs
         error: (err) => {
           console.error('Erreur lors de la suppression', err);
         }

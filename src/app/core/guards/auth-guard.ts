@@ -1,10 +1,6 @@
-// Importe la fonction inject qui permet d'utiliser des services Angular dans une fonction (comme un Guard)
+
 import { inject } from '@angular/core';
-
-// Importe Router pour faire des redirections et CanActivateFn pour créer un Guard fonctionnel
 import { Router, CanActivateFn } from '@angular/router';
-
-// Importe le service qui contient la logique de vérification de l'utilisateur connecté
 import { UserService } from '../services/ auth.service';
 
 

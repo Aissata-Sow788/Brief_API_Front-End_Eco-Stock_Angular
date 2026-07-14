@@ -14,13 +14,14 @@ import { Producttransfer } from '../producttransfer/producttransfer';
   selector: 'app-productfilter',
   imports: [RouterLink, Productform, CommonModule], // Dépendances locales nécessaires au template
   templateUrl: './productfilter.html',
-  styleUrl: './productfilter.css', 
+  styleUrl: './productfilter.css',
 })
 export class Productfilter implements OnInit {
 
   // Signaux réactifs pour stocker l'état des données (optimise la détection des changements)
   produit = signal<Product[]>([]);   // Stocke la liste filtrée des produits
   entrepots = signal<Warehouse[]>([]); // Stocke la liste globale des entrepôts récupérés
+  nomEntrepot = signal('')
 
   // Propriétés utilitaires pour suivre les identifiants en cours de manipulation
   idProduit!: number;
@@ -50,18 +51,47 @@ export class Productfilter implements OnInit {
       }
     });
 
-    // Consommation du service pour récupérer la liste complète des entrepôts
-    this.warehouseService.getWarehouse().subscribe({
-      next: (data) => this.entrepots.set(data), // Mise à jour du signal des entrepôts
-      error: (err) => console.error('Erreur récupération entrepôts', err)
-    });
-  }
+      // Consommation du service HTTP permettant de récupérer la liste complète des entrepôts
+      this.warehouseService.getWarehouse().subscribe({
 
-  // Méthode synchrone pour retrouver le nom d'un entrepôt à partir de son identifiant
-  getNomEntrepot(id: number): string {
-    const entrepot = this.entrepots().find(e => e.id === id);
-    return entrepot ? entrepot.nom : 'Inconnu';
-  }
+        // Callback exécuté automatiquement lorsque les données sont reçues avec succès
+        next: (data) => {
+
+          // Mise à jour du signal réactif contenant la liste des entrepôts
+          this.entrepots.set(data);
+
+          // Recherche dans la liste de l'entrepôt dont l'identifiant correspond
+          // à celui récupéré dans les paramètres de l'URL
+          const entrepot = data.find(e => e.id === id);
+
+          // Vérifie que l'entrepôt existe bien
+          if (entrepot) {
+
+            // Stocke le nom de l'entrepôt dans le signal nomEntrepot
+            // afin de pouvoir l'afficher dynamiquement dans le template HTML
+            this.nomEntrepot.set(entrepot.nom);
+          }
+
+        },
+
+        // Callback exécuté si une erreur survient lors de la requête HTTP
+        error: (err) => {
+          console.error('Erreur récupération entrepôts', err);
+        }
+
+      });
+
+}
+
+// Méthode synchrone pour retrouver le nom d'un entrepôt à partir de son identifiant
+getNomEntrepot(id: number): string {
+
+  // Recherche l'entrepôt correspondant dans le signal entrepots
+  const entrepot = this.entrepots().find(e => e.id === id);
+
+  // Retourne le nom trouvé sinon retourne "Inconnu"
+  return entrepot ? entrepot.nom : 'Inconnu';
+}
 
   // Redirection explicite vers la route de gestion ou de listing des entrepôts
   onAnnuler(): void {
