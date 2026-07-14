@@ -3,6 +3,7 @@ import { Injectable, inject } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
 import { Observable } from "rxjs";
 import { tap } from 'rxjs/operators';
+import { Router } from "@angular/router";
 
 @Injectable({
   // Rend le service accessible dans toute l'application
@@ -10,6 +11,7 @@ import { tap } from 'rxjs/operators';
 })
 export class UserService {
 
+  private router = inject(Router);
   // Injection du service HttpClient pour communiquer avec l'API
   private http = inject(HttpClient);
 
@@ -32,14 +34,18 @@ export class UserService {
 
           // Enregistre le token de rafraîchissement
           localStorage.setItem('refresh_token', response.refresh);
+
         }
       })
     );
   }
 
   // Déconnecte l'utilisateur en supprimant le token
-  logout() {
+  logout(): void{
     localStorage.removeItem('auth_token');
+    localStorage.removeItem('refresh_token');
+    this.router.navigate(['/']);
+
   }
 
   // Vérifie si l'utilisateur est connecté
