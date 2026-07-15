@@ -8,6 +8,7 @@ import { Warehouse } from '../../../core/models/warehouse';
 import { Router, ActivatedRoute } from '@angular/router';
 import { validate } from '@angular/forms/signals';
 import { AbstractControl, ValidationErrors } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 // Métadonnées du composant Angular décoré par @Component
 @Component({
@@ -115,11 +116,24 @@ export class Productform implements OnInit {
 
       // Consommation du service HTTP pour sauvegarder les modifications
       this.produitservice.updateProduit(this.idProduit, produitComplet).subscribe({
-        next: () => {
-          alert("Produit mis à jour avec succès !");
-          // Redirection dynamique basée sur la valeur saisie dans le contrôle 'products'
+ // Succès
+      next: () => {
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Modification effectué',
+          text: 'Le produit mise a jour avec succès.',
+          background: '#212529',
+          color: '#fff',
+          confirmButtonColor: '#198754'
+        }).then(() => {
+
+          // Redirection vers les produits de l'entrepôt de destination
           this.router.navigate(['/products']);
-        },
+
+        });
+
+      },
         error: (err) => {
           console.error('Erreur modification produit', err);
         }

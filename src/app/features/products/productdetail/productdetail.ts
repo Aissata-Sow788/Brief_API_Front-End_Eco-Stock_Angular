@@ -5,6 +5,8 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Warehouse } from '../../../core/models/warehouse';
 import { WarehouseService } from '../../../core/services/warehouse.service';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
+
 
 @Component({
   // Nom du composant utilisé dans les templates HTML
@@ -126,27 +128,58 @@ export class Productdetail implements OnInit {
       });
   }
 
- // Suppression physique d'un produit ciblé par son identifiant unique
-  onDelete(id: number): void {
-    if (confirm('Voulez-vous vraiment supprimer ce produit ?')) {
+// Méthode permettant de supprimer un produit à partir de son identifiant
+onDelete(id: number) {
 
-      // Forçage du typage de la variable numérique pour parer aux anomalies de typage JS
-      const cleanId = Number(id);
+  // Affiche une boîte de dialogue de confirmation avant la suppression
+  Swal.fire({
+    title: 'Supprimer ce produit ?',
+    text: 'Cette action est irréversible.',
+    icon: 'warning',
+    background: '#212529',
+    color: '#fff',
+    showCancelButton: true,
+    confirmButtonColor: '#dc3545',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Supprimer',
+    cancelButtonText: 'Annuler'
+  }).then((result) => {
 
-      // Traitement asynchrone de la suppression via l'Observable du service
-      this.productservice.deleteData(cleanId).subscribe({
+    // Vérifie si l'utilisateur a confirmé la suppression
+    if (result.isConfirmed) {
+
+      // Appel du service HTTP pour supprimer le produit dans la base de données
+      this.productservice.deleteData(id).subscribe({
+
+        // Exécuté lorsque la suppression est effectuée avec succès
         next: () => {
-          alert('Produit supprimé avec succès !');
 
-          this.router.navigate(['/products']);
+          Swal.fire({
+            icon: 'success',
+            title: 'Supprimé !',
+            text: 'Le produit a été supprimé.',
+            timer: 1500,
+            showConfirmButton: false
+          });
+
+          // Met à jour le signal en retirant immédiatement le produit supprimé de la liste affichée
+          this.produit.update(liste =>
+            liste.filter(p => p.id !== id)
+          );
         },
-        error: (err) => {
-          console.error('Erreur lors de la suppression', err);
-        }
-      });
-    }
-  }
 
+        // Gestion des erreurs renvoyées par l'API
+        error: (err) => {
+          console.error('Erreur lors de la suppression :', err);
+        }
+
+      });
+
+    }
+
+  });
+
+}
     retour(): void {
     this.router.navigate(['/products']);
   }

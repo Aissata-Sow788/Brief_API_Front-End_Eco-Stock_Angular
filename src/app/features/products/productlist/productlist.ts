@@ -6,6 +6,7 @@ import { Warehouse } from '../../../core/models/warehouse';
 import { ProductService } from '../../../core/services/product.service';
 import { WarehouseService } from '../../../core/services/warehouse.service';
 import { Productform } from '../productform/productform';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -70,25 +71,58 @@ export class Productlist implements OnInit {
     });
   }
 
-  // Suppression physique d'un produit ciblé par son identifiant unique
-  onDelete(id: number): void {
-    if (confirm('Voulez-vous vraiment supprimer ce produit ?')) {
 
-      // Forçage du typage de la variable numérique pour parer aux anomalies de typage JS
-      const cleanId = Number(id);
+ // Méthode permettant de supprimer un produit
+onDelete(id: number) {
 
-      // Traitement asynchrone de la suppression via l'Observable du service
-      this.productService.deleteData(cleanId).subscribe({
+  // Affiche une boîte de dialogue de confirmation avant la suppression
+  Swal.fire({
+    title: 'Supprimer ce produit ?',
+    text: 'Cette action est irréversible.',
+    icon: 'warning',
+    background: '#212529',
+    color: '#fff',
+    showCancelButton: true,
+    confirmButtonColor: '#dc3545',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Supprimer',
+    cancelButtonText: 'Annuler'
+  }).then((result) => {
+
+    // Vérifie que l'utilisateur a confirmé la suppression
+    if (result.isConfirmed) {
+
+      // Appel du service HTTP pour supprimer le produit de la base de données
+      this.productService.deleteData(id).subscribe({
+
+        // Exécuté lorsque la suppression est réalisée avec succès
         next: () => {
-          alert('Produit supprimé avec succès !');
 
-          // Mise à jour réactive du signal produit pour filtrer et exclure instantanément l'élément supprimé
-          this.produit.update(liste => liste.filter(p => p.id !== cleanId));
+          Swal.fire({
+            icon: 'success',
+            title: 'Supprimé !',
+            text: 'Le produit a été supprimé.',
+            timer: 1500,
+            showConfirmButton: false
+          });
+
+          // Met à jour le signal afin de retirer immédiatement le produit de la liste affichée
+          this.produit.update(liste =>
+            liste.filter(p => p.id !== id)
+          );
+
         },
+
+        // Gestion des erreurs retournées par l'API
         error: (err) => {
-          console.error('Erreur lors de la suppression', err);
+          console.error('Erreur lors de la suppression :', err);
         }
+
       });
+
     }
-  }
+
+  });
+
+}
 }

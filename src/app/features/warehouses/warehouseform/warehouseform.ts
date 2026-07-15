@@ -3,14 +3,14 @@ import { WarehouseService } from '../../../core/services/warehouse.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Warehouse } from '../../../core/models/warehouse';
-
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-warehouseform',
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './warehouseform.html',
-  styleUrl: './warehouseform.css', 
+  styleUrl: './warehouseform.css',
 })
 export class Warehouseform implements OnInit {
   // Décorateur @Output permettant d'émettre des événements personnalisés afin de communiquer des données au composant parent
@@ -80,19 +80,57 @@ export class Warehouseform implements OnInit {
 
     const donneesEntrepot: Partial<Warehouse> = { nom, localisation, capacite };
 
-    if (this.idEntrepot) {
-      // --- MODE MODIFICATION ---
-      // Consommation du service HTTP pour mettre à jour l'enregistrement existant
-      this.warehouseservice.updateData(this.idEntrepot, donneesEntrepot).subscribe({
-        next: (entrepotModifie) => {
-          // Émission de la donnée fraîche vers le composant parent via le canal @Output
-          this.produitAjoute.emit(entrepotModifie);
-          // Redirection programmatique vers le listing principal des entrepôts
-          this.router.navigate(['/entrepot']);
-        },
-        error: (err) => console.error('Erreur lors de la modification', err)
+// Vérifie si un identifiant d'entrepôt est présent.
+// Si oui, cela signifie que le formulaire est en mode modification.
+if (this.idEntrepot) {
+
+  // -------------------- MODE MODIFICATION --------------------
+  // Appel du service HTTP permettant de mettre à jour
+  // les informations de l'entrepôt existant dans la base de données.
+  this.warehouseservice.updateData(this.idEntrepot, donneesEntrepot).subscribe({
+
+    // Callback exécuté lorsque la mise à jour est effectuée avec succès
+    next: (entrepotModifie) => {
+
+      // Affichage d'une fenêtre de confirmation avec SweetAlert2
+      Swal.fire({
+        icon: 'success',                         // Icône de succès
+        title: 'Modification effectuée',         // Titre de la fenêtre
+        text: "L'entrepôt a été mis à jour avec succès.", // Message affiché
+        background: '#212529',                   // Couleur de fond de la popup
+        color: '#fff',                           // Couleur du texte
+        confirmButtonColor: '#198754'            // Couleur du bouton de validation
+      }).then(() => {
+
+        // Une fois la popup fermée par l'utilisateur,
+        // redirection vers la liste des entrepôts.
+        this.router.navigate(['/entrepot']);
+
       });
-    } else {
+
+    },
+
+    // Callback exécuté lorsqu'une erreur survient lors de la requête HTTP
+    error: (err) => {
+
+      // Affiche l'erreur dans la console du navigateur pour faciliter le débogage
+      console.error(err);
+
+      // Affiche une popup indiquant que la modification a échoué
+      Swal.fire({
+        icon: 'error',                           // Icône d'erreur
+        title: 'Erreur',                         // Titre de la popup
+        text: "La modification de l'entrepôt a échoué.", // Message d'erreur
+        background: '#212529',                   // Couleur de fond
+        color: '#fff',                           // Couleur du texte
+        confirmButtonColor: '#dc3545'            // Couleur du bouton
+      });
+
+    }
+
+  });
+
+} else {
       // --- MODE CRÉATION ---
       // Consommation du service HTTP pour insérer une nouvelle entrée
       this.warehouseservice.addEntrpot(donneesEntrepot as Warehouse).subscribe({

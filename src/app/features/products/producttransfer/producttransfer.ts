@@ -6,6 +6,7 @@ import { Warehouse } from '../../../core/models/warehouse';
 import { ProductService } from '../../../core/services/product.service';
 import { WarehouseService } from '../../../core/services/warehouse.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-producttransfer',
@@ -63,35 +64,78 @@ export class Producttransfer implements OnInit {
     const entrepot = this.entrepots().find(e => e.id === id);
     return entrepot ? entrepot.nom : '';
   }
+// Méthode appelée lorsqu'un utilisateur lance le transfert d'un produit
+transfererProduit(): void {
 
-  // Méthode de traitement de transfert appelée lors de l'action utilisateur
-  transfererProduit(): void {
-    // Validation basique : s'assure qu'un entrepôt de destination a été choisi (liaison ngModel)
-    if (!this.idEntrepot) {
-      alert("Veuillez sélectionner un entrepôt.");
-      return;
-    }
+  // Vérifie qu'un entrepôt de destination a bien été sélectionné
+  if (!this.idEntrepot) {
 
-    // Exécution de la requête HTTP de transfert via la souscription à l'Observable du service
-    this.produitservice
-      .transferProduit(this.idProduit, this.idEntrepot)
-      .subscribe({
-        next: (produit) => {
-          alert('Transfert effectué avec succès.');
-          // Redirection de l'utilisateur vers la vue des produits de l'entrepôt de destination
-          this.router.navigate(['/products', this.idEntrepot]);
-        },
-        error: (err) => {
-          // Gestion et extraction du message d'erreur provenant de la réponse du serveur API
-          const messageErreur = err.error?.warehouse?.[0]
-            ?? err.error?.error
-            ?? 'Erreur lors du transfert.';
-          alert(messageErreur);
-        }
-      });
+    // Affiche une fenêtre d'avertissement si aucun entrepôt n'est choisi
+    Swal.fire({
+      icon: 'warning',                      // Icône d'avertissement
+      title: 'Entrepôt non sélectionné',    // Titre de la popup
+      text: 'Veuillez sélectionner un entrepôt.', // Message affiché
+      background: '#212529',                // Couleur de fond
+      color: '#fff',                        // Couleur du texte
+      confirmButtonColor: '#0d6efd'         // Couleur du bouton de confirmation
+    });
+
+    // Interrompt l'exécution de la méthode
+    return;
   }
 
-  // Méthode de navigation explicite pour retourner à l'affichage précédent
+  // Appel du service HTTP chargé d'effectuer le transfert du produit
+  this.produitservice
+    .transferProduit(this.idProduit, this.idEntrepot)
+    .subscribe({
+
+      // Callback exécuté si le transfert est réalisé avec succès
+      next: () => {
+
+        // Affiche une popup de confirmation
+        Swal.fire({
+          icon: 'success',
+          title: 'Transfert effectué',
+          text: 'Le produit a été transféré avec succès.',
+          background: '#212529',
+          color: '#fff',
+          confirmButtonColor: '#198754'            
+        }).then(() => {
+
+          // Après la fermeture de la popup,
+          // redirige l'utilisateur vers la liste des produits
+          // du nouvel entrepôt de destination.
+          this.router.navigate(['/products', this.idEntrepot]);
+
+        });
+
+      },
+
+      // Callback exécuté si une erreur survient lors du transfert
+      error: (err) => {
+
+        // Récupère le message d'erreur renvoyé par l'API.
+        // Si aucun message spécifique n'est disponible,
+        // un message générique est utilisé.
+        const messageErreur =
+          err.error?.warehouse?.[0] ??
+          err.error?.error ??
+          'Erreur lors du transfert.';
+
+        // Affiche une popup signalant l'échec du transfert
+        Swal.fire({
+          icon: 'error',
+          title: 'Transfert impossible',
+          text: messageErreur,
+          background: '#212529',
+          color: '#fff',
+          confirmButtonColor: '#dc3545'
+        });
+
+      }
+
+    });
+}  // Méthode de navigation explicite pour retourner à l'affichage précédent
   retour(): void {
     this.router.navigate(['/products']);
   }
