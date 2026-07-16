@@ -1,0 +1,22 @@
+body{
+    background:#0b1120;
+}
+
+.card{
+    background:#171f33 !important;
+    border:1px solid #2b3650 !important;
+    width: 100%;
+}
+
+.card:hover{
+    transform: translateY(-3px);
+    transition:.3s;
+}
+
+.fs-small {
+  font-size: 0.75rem;
+}
+
+.btn{
+    border-width:1px;
+}
